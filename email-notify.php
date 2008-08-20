@@ -24,6 +24,5 @@ foreach(file($logfile) as $line)
 $to = 'nubs';
 $info = array('<c: 13>email</c>', @$from, '<c: 09>' . @$subject . '</c>', "http://10.68.4.136/out/$id_str.html");
 
-if(@$to && @count($info))
-	file("http://anubis.homelinux.com:8080/drbplugin_trigger.php?channel=" . urlencode($to) . "&str=" . urlencode(implode(' :: ', $info)));
+file("http://anubis.homelinux.com:8080/drbplugin_trigger.php?channel=" . urlencode($to) . "&str=" . urlencode(implode(" :: ", $info)));
 ?>
