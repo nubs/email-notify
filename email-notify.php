@@ -2,10 +2,10 @@
 <?php
 $logfile = '/home/anubis/projects/email-notify/logs/' . date('Ymd-His') . '.log';
 copy("php://stdin", $logfile);
-exec("/usr/local/bin/hypermail -u -m $logfile -d /home/anubis/html/out -l Inbox");
-$id = ((int)file_get_contents("/home/anubis/html/out/id")) + 1;
+exec("/usr/local/bin/hypermail -u -m $logfile -d /home/anubis/html/email -l Inbox");
+$id = ((int)file_get_contents("/home/anubis/html/email/id")) + 1;
 $id_str = sprintf("%04d", $id);
-file_put_contents("/home/anubis/html/out/id", $id_str);
+file_put_contents("/home/anubis/html/email/id", $id_str);
 foreach(file($logfile) as $line)
 {
 	if(!trim($line))
@@ -22,7 +22,7 @@ foreach(file($logfile) as $line)
 }
 
 $to = 'nubs';
-$info = array('<c: 13>email</c>', @$from, '<c: 09>' . @$subject . '</c>', "http://10.68.4.136/out/$id_str.html");
+$info = array('<c: 13>email</c>', @$from, '<c: 09>' . @$subject . '</c>', "http://10.68.4.136/email/$id_str.html");
 
 file("http://anubis.homelinux.com:8080/drbplugin_trigger.php?channel=" . urlencode($to) . "&str=" . urlencode(implode(" :: ", $info)));
 ?>
