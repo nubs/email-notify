@@ -1,11 +1,17 @@
 #!/usr/bin/php
 <?php
+function hypermail_nextid($dir = "/home/anubis/html/email")
+{
+	exec("ls -r $dir/*html", $ids);
+	foreach($ids as $id)
+		if(preg_match("/(\d{4,}).html$/", $id, $match))
+			return $match[1] + 1;
+}
+
 $emailfile = '/home/anubis/projects/email-notify/temp.msg';
 copy("php://stdin", $emailfile);
 exec("/usr/local/bin/hypermail -u -m $emailfile -d /home/anubis/html/email -l Inbox");
-$id = ((int)file_get_contents("/home/anubis/html/email/id")) + 1;
-$id_str = sprintf("%04d", $id);
-file_put_contents("/home/anubis/html/email/id", $id_str);
+
 foreach(file($emailfile) as $line)
 {
 	if(!trim($line))
@@ -22,7 +28,7 @@ foreach(file($emailfile) as $line)
 }
 
 $to = 'nubs';
-$info = array('<c: 13>email</c>', @$from, '<c: 09>' . @$subject . '</c>', "http://10.68.4.136/email/$id_str.html");
+$info = array('<c: 13>email</c>', @$from, '<c: 09>' . @$subject . '</c>', sprintf("http://10.68.4.136/email/%04d.html", hypermail_nextid()));
 
 file("http://anubis.homelinux.com:8080/drbplugin_trigger.php?channel=" . urlencode($to) . "&str=" . urlencode(implode(" :: ", $info)));
 ?>
