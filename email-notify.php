@@ -1,12 +1,12 @@
 #!/usr/bin/php
 <?php
-$logfile = '/home/anubis/projects/email-notify/logs/' . date('Ymd-His') . '.log';
-copy("php://stdin", $logfile);
-exec("/usr/local/bin/hypermail -u -m $logfile -d /home/anubis/html/email -l Inbox");
+$emailfile = '/home/anubis/projects/email-notify/temp.msg';
+copy("php://stdin", $emailfile);
+exec("/usr/local/bin/hypermail -u -m $emailfile -d /home/anubis/html/email -l Inbox");
 $id = ((int)file_get_contents("/home/anubis/html/email/id")) + 1;
 $id_str = sprintf("%04d", $id);
 file_put_contents("/home/anubis/html/email/id", $id_str);
-foreach(file($logfile) as $line)
+foreach(file($emailfile) as $line)
 {
 	if(!trim($line))
 		$headers_over = true;
