@@ -37,9 +37,9 @@ foreach(file($emailfile) as $line)
 		{
 			$addresses = preg_split("/[,;]/", $value);
 			$value = array();
-			
+
 			foreach($addresses as $address)
-				if(preg_match("/['\"]+[^'\"]+['\"]+/", $address, $match) || preg_match("/[^<@]+@[^>]+/", $address, $match))
+				if(preg_match("/[^<]+/", $address, $match) || preg_match("/[^<@]+@[^>]+/", $address, $match))
 					$value[] = trim($match[0], " '\"");
 		}
 
