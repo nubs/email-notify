@@ -33,14 +33,22 @@ foreach(file($emailfile) as $line)
 			$value = trim($matches[2]);
 		}
 
-		if(preg_match('/<([^:<]+@[^>]+)>/', $value, $matches) || preg_match('/([^:<]+@[^>]+)/', $value, $matches))
-			$value = trim($matches[1]);
-		$headers[$header][] = $value;
+		if(in_array($header, array('from', 'to', 'cc')))
+		{
+			$addresses = preg_split("/[,;]/", $value);
+			$value = array();
+			
+			foreach($addresses as $address)
+				if(preg_match("/['\"]+[^'\"]+['\"]+/", $address, $match) || preg_match("/[^<@]+@[^>]+/", $address, $match))
+					$value[] = trim($match[0], " '\"");
+		}
+
+		$headers[$header] = array_merge(@(array)$headers[$header], (array)$value);
 	}
 }
 
 $to = 'nubs';
-$info = array('<c: 13>email</c>', '<b>' . (@$headers['from'][0] == 'spencer.rinehart@dominionenterprises.com' ? "TO: {$headers['to'][0]}" : $headers['from'][0]) . '</b>', '<c: 09>' . implode(' ', @$headers['subject']) . '</c>', sprintf("http://10.67.2.17/email/%04d.html", hypermail_lastid()));
+$info = array('<c: 13>email</c>', '<b>' . (@$headers['from'][0] == 'spencer.rinehart@dominionenterprises.com' ? "TO: " . implode(', ', array_unique(array_merge(@(array)$headers['to'], @(array)$headers['cc']))) : $headers['from'][0]) . '</b>', '<c: 09>' . implode(' ', @$headers['subject']) . '</c>', sprintf("http://10.67.2.17/email/%04d.html", hypermail_lastid()));
 
 file("http://anubis.homelinux.com:8080/drbplugin_trigger.php?channel=" . urlencode($to) . "&str=" . urlencode(implode(" :: ", $info)));
 ?>
