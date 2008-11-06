@@ -48,7 +48,7 @@ foreach(file($emailfile) as $line)
 }
 
 $to = 'nubs';
-$info = array('<c: 13>email</c>', '<b>' . (in_array(@$headers['from'][0], array('Spencer Rinehart', 'spencer.rinehart@dominionenterprises.com')) ? "TO: " . implode(', ', array_unique(array_merge(@(array)$headers['to'], @(array)$headers['cc']))) : implode(', ', array_unique(@(array)$headers['from']))) . '</b>', '<c: 09>' . implode(' ', @$headers['subject']) . '</c>', sprintf("http://10.67.2.17/email/%04d.html", hypermail_lastid()));
+$info = array('<c: 13>email</c>', '<b>' . (@$headers['received'][0] ? implode(', ', array_unique(@(array)$headers['from'])) : "TO: " . implode(', ', array_unique(array_merge(@(array)$headers['to'], @(array)$headers['cc'])))) . '</b>', '<c: 09>' . implode(' ', @$headers['subject']) . '</c>', sprintf("http://10.67.2.17/email/%04d.html", hypermail_lastid()));
 
 file("http://10.67.34.23/drbplugin_trigger.rb?channel=" . urlencode($to) . "&str=" . urlencode(implode(" :: ", $info)));
 ?>
