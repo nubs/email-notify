@@ -280,19 +280,11 @@ class _html2text(sgmllib.SGMLParser):
             for (x, y) in attrs: attrsD[x] = y
             attrs = attrsD
             if attrs.has_key('src'):
-                attrs['href'] = attrs['src']
                 alt = attrs.get('alt', '')
-                i = self.previousIndex(attrs)
-                if i is not None:
-                    attrs = self.a[i]
-                else:
-                    self.acount += 1
-                    attrs['count'] = self.acount
-                    attrs['outcount'] = self.outcount
-                    self.a.append(attrs)
-		self.o("IMG:"+`attrs['count']`)
+		self.o("[IMG:")
 		if len(alt) > 0:
-		    self.o("["+alt+"]")
+		    self.o(alt + " - ")
+		self.o(attrs['src'] + "]")
         
         if tag == 'dl' and start: self.p()
         if tag == 'dt' and not start: self.pbr()
