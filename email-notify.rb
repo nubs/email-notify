@@ -43,6 +43,8 @@ module TMail
 				end
 			elsif sub_type == "html"
 				IO.popen("/home/anubis/projects/email-notify/html2text.py", "r+") {|p| p.write(unquoted_body(to_charset)); p.close_write; p.gets(nil) }
+			elsif sub_type == "calendar"
+				/^DESCRIPTION:(.*)/.match(unquoted_body(to_charset).gsub(/\n\s/m, ''))[1].gsub(/\\n/, "\n").gsub(/\\(.)/, '\1')
 			else
 				unquoted_body(to_charset)
 			end
