@@ -41,6 +41,8 @@ module TMail
 					a=-1;
 					parts.collect {|p| (p.multipart? ? p.body(to_charset) : (attachment?(p) ? "<b>Attachment: #{p["content-type"]["name"] || attachments[a+=1].original_filename || "(unnamed)"}</b>\n" : p.unquoted_body(to_charset)))}.join
 				end
+			elsif sub_type == "html"
+				IO.popen("/home/anubis/projects/email-notify/html2text.py", "r+") {|p| p.write(unquoted_body(to_charset)); p.close_write; p.gets(nil) }
 			else
 				unquoted_body(to_charset)
 			end
