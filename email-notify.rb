@@ -36,7 +36,7 @@ module TMail
 					parts.collect {|p| (p.multipart? ? p.body(to_charset) : (attachment?(p) ? "<b>Attachment: #{p["content-type"]["name"] || attachments[a+=1].original_filename || "(unnamed)"}</b>\n" : p.body(to_charset)))}.join
 				end
 			elsif sub_type == "html"
-				IO.popen("/home/anubis/projects/email-notify/html2text.py", "r+") {|p| p.write(unquoted_body(to_charset)); p.close_write; p.gets(nil) }
+				IO.popen("links --dump --dump-width 160", "r+") {|p| p.write(unquoted_body(to_charset)); p.close_write; p.gets(nil) }
 			elsif sub_type == "calendar"
 				/^DESCRIPTION:(.*)/.match(unquoted_body(to_charset).gsub(/\n\s/m, ''))[1].gsub(/\\n/, "\n").gsub(/\\(.)/, '\1')
 			else
