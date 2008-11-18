@@ -5,12 +5,6 @@ require "drb"
 
 module TMail
 	class Mail
-		# Call text/html parts attachments as well
-		alias :_attachment? :attachment?
-		def attachment?(part)
-			_attachment?(part) || (part.header['content-type'] && part.header['content-type'].sub_type == 'html')
-		end
-
 		# Changed to work with blank file_names for attachments
 		def attachments
 			if multipart?
@@ -39,7 +33,7 @@ module TMail
 				when "digest" : parts.collect {|p| TMail::Mail.parse(p.body(to_charset)).body }.join("#{"-"*78}\n")
 				else
 					a=-1;
-					parts.collect {|p| (p.multipart? ? p.body(to_charset) : (attachment?(p) ? "<b>Attachment: #{p["content-type"]["name"] || attachments[a+=1].original_filename || "(unnamed)"}</b>\n" : p.unquoted_body(to_charset)))}.join
+					parts.collect {|p| (p.multipart? ? p.body(to_charset) : (attachment?(p) ? "<b>Attachment: #{p["content-type"]["name"] || attachments[a+=1].original_filename || "(unnamed)"}</b>\n" : p.body(to_charset)))}.join
 				end
 			elsif sub_type == "html"
 				IO.popen("/home/anubis/projects/email-notify/html2text.py", "r+") {|p| p.write(unquoted_body(to_charset)); p.close_write; p.gets(nil) }
