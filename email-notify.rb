@@ -45,7 +45,7 @@ module TMail
 		end
 
 		def clean_body(to_charset = 'utf-8')
-			body.sub(/\n\s*-+original\s+message.*/im, '').sub(/\n\s*_+\s*\n\s*from:.*/im, '').sub(/^[^\n]+wrote:?\n\s*>/im, '').gsub(/^>.*/, '')
+			body.sub(/\n\s*-+original\s+message.*/im, '').sub(/\n\s*_+\s*\n\s*from:.*/im, '').sub(/^[^\n]+wrote:?\n\s*>/im, '').gsub(/^>.*/, '').sub(/^\s*(regards|thanks)\s*,.*/im, '')
 		end
 	end
 end
