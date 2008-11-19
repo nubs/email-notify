@@ -43,10 +43,14 @@ module TMail
 				unquoted_body(to_charset)
 			end
 		end
+
+		def clean_body(to_charset = 'utf-8')
+			body.sub(/\n\s*-+original\s+message.*/im, '').sub(/\n\s*_+\s*\n\s*from:.*/im, '').sub(/^[^\n]+wrote:?\n\s*>/im, '').gsub(/^>.*/, '')
+		end
 	end
 end
 email = TMail::Mail.parse($stdin.read)
 
 DRb.start_service
 bot = DRbObject.new(nil, 'druby://10.67.34.23:7666')
-bot.send_msg("nubs", "<c: 13>email</c> :: <b>#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? "" : "TO: ")}#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? email.from_addrs : [email.to_addrs, email.cc_addrs, email.bcc_addrs]).flatten.compact.uniq.collect {|a| a.name ? a.name.gsub(/^[ '"]+|[ '"]+$/,'') : a.spec }}</b> :: <c: 09>#{email.subject}</c>\n#{email.body.squeeze("\n").split("\n").collect {|l| " "*9 + l.strip }.join("\n")}")
+bot.send_msg("nubs", "<c: 13>email</c> :: <b>#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? "" : "TO: ")}#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? email.from_addrs : [email.to_addrs, email.cc_addrs, email.bcc_addrs]).flatten.compact.uniq.collect {|a| a.name ? a.name.gsub(/^[ '"]+|[ '"]+$/,'') : a.spec }}</b> :: <c: 09>#{email.subject}</c>\n#{email.clean_body.squeeze("\n").split("\n").collect {|l| " "*9 + l.strip }.join("\n")}")
