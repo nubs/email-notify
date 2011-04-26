@@ -27,4 +27,4 @@ def gettextpart(part)
   end
 end
 
-Net::SMTP.start('smtp.dominionenterprises.com') {|smtp| smtp.send_message "From: anubisnotify\nTo: 7576303572@vtext.com\nSubject: Email\n\n#{"#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}"}", "anubis@vt.edu", "7576303572@vtext.com" }
+Net::SMTP.start('smtp.dominionenterprises.com') {|smtp| smtp.send_message "#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}", "anubis@vt.edu", "7576303572@vtext.com" }
