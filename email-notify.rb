@@ -6,4 +6,25 @@ require "net/smtp"
 email = Mail.new($stdin.read)
 addresses = (email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? "" : "TO: ") + "#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? email.from : [email.to, email.cc, email.bcc]).flatten.compact.uniq}"
 
-Net::SMTP.start('smtp.dominionenterprises.com') {|smtp| smtp.send_message "From: anubisnotify\nTo: 7576303572@vtext.com\nSubject: Email\n\n#{"#{email.subject}\n#{addresses}\n#{email.body.decoded}"}", "anubis@vt.edu", "7576303572@vtext.com" }
+def gettextpart(part)
+  if part.multipart?
+    multiparttexts = part.parts.select {|p| p.multipart? }.map {|p| gettextpart(p) }
+
+    alltextparts = multiparttexts + part.parts
+
+    plaintextparts = alltextparts.select {|p| p.content_type == 'text/plain' }
+    return plaintextparts.first unless plaintextparts.empty?
+
+    textparts = alltextparts.select {|p| p.content_type =~ /^text\// }
+    return textparts.first unless textparts.empty?
+
+    nonmultiparts = alltextparts.select {|p| !p.multipart? }
+    return nonmultiparts.first unless nonmultiparts.empty?
+
+    return alltextparts.first
+  else
+    return part
+  end
+end
+
+Net::SMTP.start('smtp.dominionenterprises.com') {|smtp| smtp.send_message "From: anubisnotify\nTo: 7576303572@vtext.com\nSubject: Email\n\n#{"#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}"}", "anubis@vt.edu", "7576303572@vtext.com" }
