@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 require "rubygems"
 require "mail"
-require "drb"
 require "net/smtp"
 
 email = Mail.new($stdin.read)
