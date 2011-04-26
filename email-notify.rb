@@ -4,7 +4,7 @@ require "mail"
 require "net/smtp"
 
 email = Mail.new($stdin.read)
-addresses = (email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? "" : "TO: ") + "#{(email["received"] || email.from != "spencer.rinehart@dominionenterprises.com" ? email.from : [email.to, email.cc, email.bcc]).flatten.compact.uniq}"
+addresses = (email["received"] ? email.from : ['TO', email.to, email.cc, email.bcc]).flatten.compact.uniq.map {|e| e.gsub(/@dominionenterprises\.com/, '@DE') }.join(",")
 
 def gettextpart(part)
   if part.multipart?
