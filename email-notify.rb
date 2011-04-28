@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 require "rubygems"
 require "mail"
-require "net/smtp"
 
 email = Mail.new($stdin.read)
 addresses = (email["received"] ? email.from : ['TO', email.to, email.cc, email.bcc]).flatten.compact.uniq.map {|e| e.gsub(/@dominionenterprises\.com/, '@DE') }.join(",")
@@ -27,4 +26,4 @@ def gettextpart(part)
   end
 end
 
-Net::SMTP.start('smtp.dominionenterprises.com') {|smtp| smtp.send_message "#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}", "anubis@vt.edu", "7576303572@vtext.com" }
+puts "#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}"
