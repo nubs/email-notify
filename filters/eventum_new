@@ -1,0 +1,12 @@
+#!/bin/sed -nf
+/^New Issue Assigned [[:digit:]]\+$/,/$./{
+	1p
+	/^-\+$/,/^-\+$/ {
+		/^-\+$/d
+		s/^[[:space:]]\+//
+		p
+	}
+	b end
+}
+p
+: end
