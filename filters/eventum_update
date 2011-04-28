@@ -1,0 +1,8 @@
+#!/bin/sed -nf
+/^\[#[[:digit:]]\+\] Updated:/,/$./{
+	1,2p
+	/^[-+].*[^-]/p
+	b end
+}
+p
+: end
