@@ -1,0 +1,15 @@
+#!/bin/sed -nf
+/^Closed [[:digit:]]\+$/,/$./{
+	/^Closed/ {
+		N
+		N
+		s/Closed \([[:digit:]]\+\).*This is an.* \(closed by .*\)with the message:/\1 \2/
+	}
+	/^[\n[:space:]]*$/d
+	/To view more details/,/$./d
+	p
+	
+	b end
+}
+p
+: end
