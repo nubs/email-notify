@@ -1,0 +1,2 @@
+#!/bin/sed -f
+2s/@\(traderonline\|dominionenterprises\)\.com/@DE/

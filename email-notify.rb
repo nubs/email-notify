@@ -2,7 +2,7 @@
 require "mail"
 
 email = Mail.new($stdin.read)
-addresses = (email["received"] ? email.from : ['TO', email.to, email.cc, email.bcc]).flatten.compact.uniq.map {|e| e.gsub(/@dominionenterprises\.com/, '@DE') }.join(",")
+addresses = (email["received"] ? email.from : ['TO', email.to, email.cc, email.bcc]).flatten.compact.uniq
 
 def gettextpart(part)
   if part.multipart?
@@ -25,4 +25,4 @@ def gettextpart(part)
   end
 end
 
-puts "#{email.subject}\n#{addresses}\n#{gettextpart(email).body.decoded}"
+puts "#{email.subject}\n#{addresses.join(",")}\n#{gettextpart(email).body.decoded}"
