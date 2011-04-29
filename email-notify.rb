@@ -13,6 +13,14 @@ def gettextpart(part)
     plaintextparts = alltextparts.select {|p| p.content_type == 'text/plain' }
     return plaintextparts.first unless plaintextparts.empty?
 
+    htmltextparts = alltextparts.select {|p| p.content_type =~ /^text\/html/ }
+    return IO.popen("elinks -dump -dump-charset utf8 -default-mime-type text/html", "r+") {|io|
+      io.puts htmltextparts.first.body
+      io.close_write
+      htmltextparts.first.body = io.read
+      htmltextparts.first
+    } unless htmltextparts.empty?
+
     textparts = alltextparts.select {|p| p.content_type =~ /^text\// }
     return textparts.first unless textparts.empty?
 
