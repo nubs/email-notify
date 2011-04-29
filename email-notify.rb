@@ -10,7 +10,7 @@ def gettextpart(part)
 
     alltextparts = multiparttexts + part.parts
 
-    plaintextparts = alltextparts.select {|p| p.content_type == 'text/plain' }
+    plaintextparts = alltextparts.select {|p| p.content_type =~ /^text\/plain/ }
     return plaintextparts.first unless plaintextparts.empty?
 
     htmltextparts = alltextparts.select {|p| p.content_type =~ /^text\/html/ }
