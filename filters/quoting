@@ -1,0 +1,3 @@
+#!/bin/sed -f
+/^>.*/d
+/^On \(Mon\|Tues\?\|Wed\(nes\)\?\|Thu\(rs\)\?\|Fri\|Sat\(ur\)\?\|Sun\)\(day\)\?/Q
