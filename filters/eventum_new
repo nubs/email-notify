@@ -1,12 +1,7 @@
-#!/bin/sed -nf
+#!/bin/sed -f
 /^New Issue Assigned [[:digit:]]\+$/,/$./{
-	1p
-	/^-\+$/,/^-\+$/ {
-		/^-\+$/d
-		s/^[[:space:]]\+//
-		p
-	}
-	b end
+	2,/^-\+$/d
+	s/^[[:space:]]\+//
+	/^ID:/d
+	/^-\+$/Q
 }
-p
-: end

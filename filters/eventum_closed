@@ -1,16 +1,11 @@
-#!/bin/sed -nf
+#!/bin/sed -f
 /^Closed [[:digit:]]\+$/,/$./{
-	/^Closed/ {
+	// {
 		N
 		N
 		N
 		s/Closed \([[:digit:]]\+\).*This is an.* \(closed by .*\)with the message:/\1 \2/
 	}
-	/^[\n[:space:]]*$/d
-	/To view more details/,/$./d
-	p
-	
-	b end
+
+	/To view more details/Q
 }
-p
-: end
