@@ -1,0 +1,2 @@
+#!/bin/sed -f
+s/[[:space:]]*https\?:\/\/[[:alnum:]_\/.?=&%@-]\+//g
